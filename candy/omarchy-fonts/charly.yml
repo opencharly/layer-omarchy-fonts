@@ -1,0 +1,75 @@
+omarchy-fonts:
+    candy:
+        version: 2026.242.0000
+        description: |
+            The font and icon set Omarchy's shell, terminal and editors are designed against.
+            omarchy-fonts installs the faces Omarchy's own configuration names: the
+            JetBrains Mono Nerd variant its terminal and Quickshell bar render with, the
+            iA Writer family its editor themes reference, Noto for CJK and emoji coverage,
+            and the Yaru icon theme and GTK theme engine its GTK applications resolve
+            against. Without them the desktop still starts but renders with fallback
+            faces and missing glyph boxes wherever a Nerd Font symbol is used, which is
+            most of the bar. Verifiable on the built image: each font package is
+            installed and fontconfig can resolve the families by name.
+        require:
+            # The omarchy package's own fontconfig drop-ins ship with omarchy-settings,
+            # and fc-cache needs the /etc/skel-seeded user to exist.
+            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0437'
+        distro:
+            arch:
+                package:
+                    # The Nerd-patched JetBrains Mono variant Omarchy pins. NOT
+                    # ttf-jetbrains-mono (which layer-desktop-fonts installs for the
+                    # sway/labwc desktops): the -nerd-basic build carries the glyph
+                    # ranges the Quickshell bar and starship prompt draw from, and the
+                    # plain build renders those as tofu.
+                    - ttf-jetbrains-mono-nerd-basic
+                    - ttf-ia-writer
+                    - ttfx
+                    - woff2-font-awesome
+                    # Broad script + emoji coverage. layer-fonts-extended also ships
+                    # these for the CachyOS desktops; they are named here rather than
+                    # composed because that candy carries a much larger CachyOS-specific
+                    # set this image has no use for, and pacman installs a package once
+                    # regardless of how many candies name it.
+                    - noto-fonts
+                    - noto-fonts-cjk
+                    - noto-fonts-emoji
+                    - fontconfig
+                    # GTK icon + theme resolution for Omarchy's GTK applications.
+                    - yaru-icon-theme
+                    - gnome-themes-extra
+        plan:
+            - check: the Nerd-patched coding font the bar and prompt draw glyphs from is installed
+              id: omarchy-fonts-nerd
+              context:
+                - build
+              package:
+                package: ttf-jetbrains-mono-nerd-basic
+
+            - check: fontconfig resolves the coding font family by name
+              id: omarchy-fonts-fc-resolves
+              context:
+                - build
+              # The package being present is not the same as fontconfig being able to
+              # resolve it: a missing or stale cache renders the family as fallback with
+              # no error anywhere. Asserted at the boundary that actually matters.
+              stdout:
+                - contains: "JetBrains"
+              command: fc-match "JetBrainsMono Nerd Font"
+
+            - check: emoji coverage resolves, so the bar and notifications render glyphs not boxes
+              id: omarchy-fonts-emoji
+              context:
+                - build
+              stdout:
+                - contains: "Noto"
+              command: fc-match "Noto Color Emoji"
+
+            - check: the Yaru icon theme Omarchy's GTK applications resolve against is installed
+              id: omarchy-fonts-icons
+              context:
+                - build
+              file:
+                file: /usr/share/icons/Yaru
+                exists: true
