@@ -1,6 +1,5 @@
 omarchy-fonts:
     candy:
-        version: 2026.242.0000
         description: |
             The font and icon set Omarchy's shell, terminal and editors are designed against.
             omarchy-fonts installs the faces Omarchy's own configuration names: the
