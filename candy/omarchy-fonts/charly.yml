@@ -1,6 +1,5 @@
 omarchy-fonts:
     candy:
-        version: 2026.242.0000
         description: |
             The font and icon set Omarchy's shell, terminal and editors are designed against.
             omarchy-fonts installs the faces Omarchy's own configuration names: the
@@ -14,7 +13,7 @@ omarchy-fonts:
         require:
             # The omarchy package's own fontconfig drop-ins ship with omarchy-settings,
             # and fc-cache needs the /etc/skel-seeded user to exist.
-            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0437'
+            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0701'
         distro:
             arch:
                 package:
@@ -46,7 +45,6 @@ omarchy-fonts:
                 - build
               package:
                 package: ttf-jetbrains-mono-nerd-basic
-
             - check: fontconfig resolves the coding font family by name
               id: omarchy-fonts-fc-resolves
               context:
@@ -57,7 +55,6 @@ omarchy-fonts:
               stdout:
                 - contains: "JetBrains"
               command: fc-match "JetBrainsMono Nerd Font"
-
             - check: emoji coverage resolves, so the bar and notifications render glyphs not boxes
               id: omarchy-fonts-emoji
               context:
@@ -65,7 +62,6 @@ omarchy-fonts:
               stdout:
                 - contains: "Noto"
               command: fc-match "Noto Color Emoji"
-
             - check: the Yaru icon theme Omarchy's GTK applications resolve against is installed
               id: omarchy-fonts-icons
               context:
