@@ -13,7 +13,7 @@ omarchy-fonts:
         require:
             # The omarchy package's own fontconfig drop-ins ship with omarchy-settings,
             # and fc-cache needs the /etc/skel-seeded user to exist.
-            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0437'
+            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.272.0437'
         distro:
             arch:
                 package:
